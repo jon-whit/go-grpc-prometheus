@@ -30,7 +30,7 @@ There are two types of interceptors: client-side and server-side. This package p
 ### Server-side
 
 ```go
-import "github.com/grpc-ecosystem/go-grpc-prometheus"
+import "github.com/jon-whit/go-grpc-prometheus"
 ...
     // Initialize your gRPC server's interceptor.
     myServer := grpc.NewServer(
@@ -49,7 +49,7 @@ import "github.com/grpc-ecosystem/go-grpc-prometheus"
 ### Client-side
 
 ```go
-import "github.com/grpc-ecosystem/go-grpc-prometheus"
+import "github.com/jon-whit/go-grpc-prometheus"
 ...
    clientConn, err = grpc.Dial(
        address,
