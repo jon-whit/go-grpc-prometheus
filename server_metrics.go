@@ -2,6 +2,7 @@ package grpc_prometheus
 
 import (
 	"context"
+
 	"github.com/grpc-ecosystem/go-grpc-prometheus/packages/grpcstatus"
 	prom "github.com/prometheus/client_golang/prometheus"
 
@@ -68,7 +69,7 @@ func (m *ServerMetrics) EnableHandlingTimeHistogram(opts ...HistogramOption) {
 	if !m.serverHandledHistogramEnabled {
 		m.serverHandledHistogram = prom.NewHistogramVec(
 			m.serverHandledHistogramOpts,
-			[]string{"grpc_type", "grpc_service", "grpc_method"},
+			[]string{"grpc_type", "grpc_service", "grpc_method", "grpc_code"},
 		)
 	}
 	m.serverHandledHistogramEnabled = true
@@ -178,7 +179,9 @@ func preRegisterMethod(metrics *ServerMetrics, serviceName string, mInfo *grpc.M
 	metrics.serverStreamMsgReceived.GetMetricWithLabelValues(methodType, serviceName, methodName)
 	metrics.serverStreamMsgSent.GetMetricWithLabelValues(methodType, serviceName, methodName)
 	if metrics.serverHandledHistogramEnabled {
-		metrics.serverHandledHistogram.GetMetricWithLabelValues(methodType, serviceName, methodName)
+		for _, code := range allCodes {
+			metrics.serverHandledHistogram.GetMetricWithLabelValues(methodType, serviceName, methodName, code.String())
+		}
 	}
 	for _, code := range allCodes {
 		metrics.serverHandledCounter.GetMetricWithLabelValues(methodType, serviceName, methodName, code.String())
